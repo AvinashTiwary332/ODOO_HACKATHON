@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% set page_title = "Employees" %}
+{% block content %}
+<section class="panel">
+  <div class="section-head">
+    <h2>Employee Directory</h2>
+    <form class="search-form"><input class="form-control" name="q" value="{{ q }}" placeholder="Search name, email, ID, department"><button class="btn btn-primary">Search</button></form>
+  </div>
+  <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Name</th><th>ID</th><th>Department</th><th>Designation</th><th>Email</th><th>Salary</th><th></th></tr></thead><tbody>{% for e in employees %}<tr><td>{{ e.user.name }}</td><td>{{ e.employee_id }}</td><td>{{ e.department }}</td><td>{{ e.designation }}</td><td>{{ e.user.email }}</td><td>{{ e.salary }}</td><td class="table-actions"><a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_employee', employee_id=e.id) }}">Edit</a>{% if current_user.role == 'Admin' %}<form method="post" action="{{ url_for('admin.delete_employee', employee_id=e.id) }}" onsubmit="return confirm('Delete this employee?')"><button class="btn btn-sm btn-outline-danger">Delete</button></form>{% endif %}</td></tr>{% else %}<tr><td colspan="7" class="text-center">No employees found.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}
