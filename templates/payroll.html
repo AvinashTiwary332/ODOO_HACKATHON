@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set page_title = "Payroll" %}
+{% block content %}
+{% if admin_view %}
+<form method="post" class="panel row g-3">
+  <h2>Generate Salary</h2>
+  <div class="col-md-3"><select class="form-select" name="employee_id">{% for e in employees %}<option value="{{ e.id }}">{{ e.user.name }} - {{ e.employee_id }}</option>{% endfor %}</select></div>
+  <div class="col-md-3"><input class="form-control" name="month" placeholder="July 2026" required></div>
+  <div class="col-md-2"><input class="form-control" name="base_salary" placeholder="Base salary"></div>
+  <div class="col-md-2"><input class="form-control" name="bonus" placeholder="Bonus"></div>
+  <div class="col-md-2"><input class="form-control" name="deductions" placeholder="Deductions"></div>
+  <div class="col-12"><button class="btn btn-primary">Generate</button></div>
+</form>
+{% endif %}
+<section class="panel">
+  <h2>{{ "Payroll Records" if admin_view else "My Salary Slips" }}</h2>
+  <div class="table-responsive"><table class="table"><thead><tr>{% if admin_view %}<th>Employee</th>{% endif %}<th>Month</th><th>Base</th><th>Bonus</th><th>Deductions</th><th>Net</th><th>Status</th></tr></thead><tbody>{% for p in payrolls %}<tr>{% if admin_view %}<td>{{ p.employee.user.name }}</td>{% endif %}<td>{{ p.month }}</td><td>{{ p.base_salary }}</td><td>{{ p.bonus }}</td><td>{{ p.deductions }}</td><td><b>{{ p.net_salary }}</b></td><td><span class="status approved">{{ p.status }}</span></td></tr>{% else %}<tr><td colspan="7" class="text-center">No payroll generated yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}
