@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set page_title = "Profile" %}
+{% block content %}
+<section class="profile-layout">
+  <article class="profile-card">
+    <img src="{{ url_for('static', filename='uploads/' ~ employee.profile_image) }}" onerror="this.src='{{ url_for('static', filename='images/default-avatar.svg') }}'" alt="Profile">
+    <h2>{{ employee.user.name }}</h2>
+    <p>{{ employee.designation }} · {{ employee.department }}</p>
+    <span>{{ employee.employee_id }}</span>
+  </article>
+  <article class="panel">
+    <h2>Personal Information</h2>
+    <form method="post" enctype="multipart/form-data" class="row g-3">
+      <div class="col-md-6"><label>Name</label><input class="form-control" name="name" value="{{ employee.user.name }}" {% if not editable %}readonly{% endif %}></div>
+      <div class="col-md-6"><label>Email</label><input class="form-control" value="{{ employee.user.email }}" readonly></div>
+      <div class="col-md-6"><label>Department</label><input class="form-control" name="department" value="{{ employee.department }}" {% if not editable %}readonly{% endif %}></div>
+      <div class="col-md-6"><label>Designation</label><input class="form-control" name="designation" value="{{ employee.designation }}" {% if not editable %}readonly{% endif %}></div>
+      <div class="col-md-6"><label>Joining Date</label><input class="form-control" value="{{ employee.joining_date }}" readonly></div>
+      <div class="col-md-6"><label>Salary</label><input class="form-control" name="salary" value="{{ employee.salary }}" {% if not editable %}readonly{% endif %}></div>
+      <div class="col-md-6"><label>Phone</label><input class="form-control" name="phone" value="{{ employee.phone or '' }}"></div>
+      <div class="col-md-6"><label>Profile Picture</label><input class="form-control" type="file" name="profile_image" accept="image/*" {% if editable %}disabled{% endif %}></div>
+      <div class="col-12"><label>Address</label><textarea class="form-control" name="address">{{ employee.address or '' }}</textarea></div>
+      <div class="col-12"><button class="btn btn-primary">Save Changes</button></div>
+    </form>
+  </article>
+</section>
+{% endblock %}
