@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "HRMS" }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+</head>
+<body>
+{% if current_user %}
+<aside class="sidebar">
+  <a class="brand" href="{{ url_for('auth.index') }}"><i class="fa-solid fa-cubes"></i><span>HRMS</span></a>
+  <nav>
+    <a href="{{ url_for('admin.dashboard' if current_user.role in ['Admin','HR Officer'] else 'employee.dashboard') }}"><i class="fa-solid fa-chart-pie"></i>Dashboard</a>
+    {% if current_user.role in ['Admin','HR Officer'] %}
+    <a href="{{ url_for('admin.employee_list') }}"><i class="fa-solid fa-users"></i>Employees</a>
+    <a href="{{ url_for('admin.attendance_admin') }}"><i class="fa-solid fa-clock"></i>Attendance</a>
+    <a href="{{ url_for('admin.approvals') }}"><i class="fa-solid fa-calendar-check"></i>Approvals</a>
+    <a href="{{ url_for('admin.payroll') }}"><i class="fa-solid fa-wallet"></i>Payroll</a>
+    {% else %}
+    <a href="{{ url_for('employee.profile') }}"><i class="fa-solid fa-id-card"></i>Profile</a>
+    <a href="{{ url_for('attendance.history') }}"><i class="fa-solid fa-clock"></i>Attendance</a>
+    <a href="{{ url_for('leave.leave_home') }}"><i class="fa-solid fa-calendar-days"></i>Leave</a>
+    <a href="{{ url_for('payroll.payroll_home') }}"><i class="fa-solid fa-wallet"></i>Payroll</a>
+    {% endif %}
+  </nav>
+</aside>
+{% endif %}
+<main class="{{ 'app-main' if current_user else 'auth-main' }}">
+  {% if current_user %}
+  <header class="topbar">
+    <div>
+      <p class="eyebrow mb-0">{{ current_user.role }}</p>
+      <h1>{{ page_title or "Human Resource Management" }}</h1>
+    </div>
+    <div class="dropdown">
+      <button class="avatar-btn dropdown-toggle" data-bs-toggle="dropdown">{{ current_user.name[:1] }}</button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><span class="dropdown-item-text">{{ current_user.email }}</span></li>
+        <li><a class="dropdown-item" href="{{ url_for('employee.profile') }}">My Profile</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log out</a></li>
+      </ul>
+    </div>
+  </header>
+  {% endif %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
