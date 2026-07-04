@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set page_title = "Leave" %}
+{% block content %}
+<section class="content-grid">
+  <form method="post" class="panel stacked-form">
+    <h2>Apply Leave</h2>
+    <select class="form-select" name="leave_type" required><option>Paid Leave</option><option>Sick Leave</option><option>Casual Leave</option><option>Unpaid Leave</option></select>
+    <input class="form-control" type="date" name="start_date" required>
+    <input class="form-control" type="date" name="end_date" required>
+    <textarea class="form-control" name="remarks" placeholder="Remarks"></textarea>
+    <button class="btn btn-primary">Submit Request</button>
+  </form>
+  <div class="panel"><h2>Leave Balance</h2><div class="leave-balance"><span>Paid 18</span><span>Sick 07</span><span>Casual 05</span><span>Unpaid ∞</span></div></div>
+</section>
+<section class="panel"><h2>Leave History</h2>{% include "_leave_table.html" %}</section>
+{% endblock %}
