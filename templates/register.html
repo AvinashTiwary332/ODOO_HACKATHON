@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-shell wide">
+  <div class="auth-panel">
+    <h1>Create HRMS Account</h1>
+    <form method="post" class="row g-3">
+      <div class="col-md-6"><input class="form-control" name="name" placeholder="Full name" required></div>
+      <div class="col-md-6"><input class="form-control" type="email" name="email" placeholder="Email" required></div>
+      <div class="col-md-6"><input class="form-control" name="employee_id" placeholder="Employee ID" required></div>
+      <div class="col-md-6"><select class="form-select" name="role"><option>Employee</option><option>HR Officer</option><option>Admin</option></select></div>
+      <div class="col-md-6"><input class="form-control" name="department" placeholder="Department" required></div>
+      <div class="col-md-6"><input class="form-control" name="designation" placeholder="Designation" required></div>
+      <div class="col-md-6"><input class="form-control" type="date" name="joining_date"></div>
+      <div class="col-md-6"><input class="form-control" type="number" name="salary" placeholder="Salary"></div>
+      <div class="col-md-6"><input class="form-control" name="phone" placeholder="Phone"></div>
+      <div class="col-md-6"><input class="form-control" type="password" name="password" placeholder="Password" required></div>
+      <div class="col-12"><textarea class="form-control" name="address" placeholder="Address"></textarea></div>
+      <div class="col-12"><button class="btn btn-primary w-100">Register</button></div>
+    </form>
+    <a href="{{ url_for('auth.login') }}">Back to login</a>
+  </div>
+</section>
+{% endblock %}
