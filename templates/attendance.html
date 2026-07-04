@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set page_title = "Attendance" %}
+{% block content %}
+{% if not admin_view %}
+<section class="panel action-row">
+  <form method="post" action="{{ url_for('attendance.check_in') }}"><button class="btn btn-success" {% if today_record %}disabled{% endif %}><i class="fa-solid fa-play"></i> Check In</button></form>
+  <form method="post" action="{{ url_for('attendance.check_out') }}"><button class="btn btn-danger" {% if not today_record or today_record.check_out %}disabled{% endif %}><i class="fa-solid fa-stop"></i> Check Out</button></form>
+</section>
+{% endif %}
+<section class="panel">
+  <div class="section-head"><h2>{{ "All Attendance" if admin_view else "My Attendance" }}</h2><a class="btn btn-outline-primary btn-sm" href="?export=csv">Export</a></div>
+  <div class="table-responsive"><table class="table">
+    <thead><tr>{% if admin_view %}<th>Employee</th>{% endif %}<th>Date</th><th>Check In</th><th>Check Out</th><th>Hours</th><th>Status</th><th>Approved</th>{% if admin_view %}<th></th>{% endif %}</tr></thead>
+    <tbody>{% for r in records %}<tr>{% if admin_view %}<td>{{ r.employee.user.name }}</td>{% endif %}<td>{{ r.date }}</td><td>{{ r.check_in.strftime('%H:%M') if r.check_in else '-' }}</td><td>{{ r.check_out.strftime('%H:%M') if r.check_out else '-' }}</td><td>{{ r.working_hours }}</td><td><span class="status {{ r.status|lower|replace(' ','-') }}">{{ r.status }}</span></td><td>{{ 'Yes' if r.approved else 'No' }}</td>{% if admin_view %}<td><form method="post" action="{{ url_for('admin.approve_attendance', record_id=r.id) }}"><button class="btn btn-sm btn-primary">Approve</button></form></td>{% endif %}</tr>{% else %}<tr><td colspan="8" class="text-center">No attendance records.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
