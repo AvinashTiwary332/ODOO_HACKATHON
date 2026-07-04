@@ -1,0 +1,31 @@
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Days</th><th>Status</th><th>Comments</th>{% if current_user.role in ['Admin','HR Officer'] %}<th>Action</th>{% endif %}</tr></thead>
+    <tbody>
+    {% for leave in leaves or recent_leaves %}
+      <tr>
+        <td>{{ leave.employee.user.name }}</td>
+        <td>{{ leave.leave_type }}</td>
+        <td>{{ leave.start_date }} to {{ leave.end_date }}</td>
+        <td>{{ leave.total_days }}</td>
+        <td><span class="status {{ leave.status|lower }}">{{ leave.status }}</span></td>
+        <td>{{ leave.admin_comments or "-" }}</td>
+        {% if current_user.role in ['Admin','HR Officer'] %}
+        <td>
+          {% if leave.status == 'Pending' %}
+          <form method="post" class="inline-actions">
+            <input type="hidden" name="leave_id" value="{{ leave.id }}">
+            <input class="form-control form-control-sm" name="comments" placeholder="Comment">
+            <button class="btn btn-sm btn-success" name="action" value="Approved">Approve</button>
+            <button class="btn btn-sm btn-danger" name="action" value="Rejected">Reject</button>
+          </form>
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="text-center">No leave records found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
