@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set page_title = "Dashboard" %}
+{% block content %}
+{% if current_user.role in ['Admin','HR Officer'] %}
+<section class="metric-grid">
+  {% for label, value, icon in [('Employees',stats.employees,'users'),('Present Today',stats.present,'user-check'),('Absent Today',stats.absent,'user-xmark'),('Pending Leaves',stats.pending,'hourglass-half'),('Approved Leaves',stats.approved,'circle-check'),('Payroll',stats.payroll,'wallet')] %}
+  <article class="metric-card"><i class="fa-solid fa-{{ icon }}"></i><span>{{ label }}</span><strong>{{ value }}</strong></article>
+  {% endfor %}
+</section>
+<section class="content-grid">
+  <div class="panel"><h2>Monthly Attendance</h2><canvas id="attendanceChart"></canvas></div>
+  <div class="panel"><h2>Leave Statistics</h2><canvas id="leaveChart" data-pending="{{ stats.pending }}" data-approved="{{ stats.approved }}" data-rejected="{{ stats.rejected }}"></canvas></div>
+</section>
+<section class="panel"><h2>Recent Leave Requests</h2>{% include "_leave_table.html" with context %}</section>
+{% else %}
+<section class="metric-grid">
+  <article class="metric-card"><i class="fa-solid fa-id-badge"></i><span>Employee ID</span><strong>{{ employee.employee_id }}</strong></article>
+  <article class="metric-card"><i class="fa-solid fa-building"></i><span>Department</span><strong>{{ employee.department }}</strong></article>
+  <article class="metric-card"><i class="fa-solid fa-wallet"></i><span>Salary</span><strong>{{ "%.2f"|format(employee.salary) }}</strong></article>
+</section>
+<section class="content-grid">
+  <div class="panel"><h2>Quick Actions</h2><div class="action-row"><a class="btn btn-primary" href="{{ url_for('attendance.history') }}">Attendance</a><a class="btn btn-outline-primary" href="{{ url_for('leave.leave_home') }}">Apply Leave</a><a class="btn btn-outline-primary" href="{{ url_for('payroll.payroll_home') }}">Salary Slip</a></div></div>
+  <div class="panel"><h2>Notifications</h2>{% for n in notifications %}<p class="list-line"><b>{{ n.title }}</b><br>{{ n.message }}</p>{% else %}<p>No notifications yet.</p>{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}
